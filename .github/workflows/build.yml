@@ -34,28 +34,28 @@ jobs:
           SCONS_CACHE: .scons-cache
           SCONS_CACHE_DIR: .scons-cache
         run: |
-          cd godot-cpp && scons target=template-debug generate_bindings=yes
+          cd godot-cpp && scons target=template_debug generate_bindings=yes
       - name: Build Godot cpp template release
         shell: sh
         env:
           SCONS_CACHE: .scons-cache
           SCONS_CACHE_DIR: .scons-cache
         run: |
-          cd godot-cpp && scons target=template-release generate_bindings=yes
+          cd godot-cpp && scons target=template_release generate_bindings=yes
       - name: Build Physics Server Box2D
         shell: sh
         env:
           SCONS_CACHE: .scons-cache
           SCONS_CACHE_DIR: .scons-cache
         run: |
-          scons target=template-debug generate_bindings=no
+          scons target=template_debug generate_bindings=no
       - name: Build Physics Server Box2D
         shell: sh
         env:
           SCONS_CACHE: .scons-cache
           SCONS_CACHE_DIR: .scons-cache
         run: |
-          scons target=template-release generate_bindings=no
+          scons target=template_release generate_bindings=no
       - name: Save .scons_cache directory
         uses: actions/cache/save@v3
         with:
