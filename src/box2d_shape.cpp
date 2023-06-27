@@ -9,11 +9,11 @@
 #include <box2d/b2_edge_shape.h>
 #include <box2d/b2_polygon_shape.h>
 
-#define SHAPE_SMALLEST_VALUE 0.01
+#define SHAPE_SMALLEST_VALUE 0.1
 
 void Box2DShape::recreate_shape() {
 	if (body) {
-		body->recreate_shape(0);
+		body->recreate_shapes();
 	}
 }
 
@@ -23,6 +23,7 @@ void Box2DShapeCircle::set_data(const Variant &p_data) {
 	ERR_FAIL_COND(p_data.get_type() != Variant::FLOAT && p_data.get_type() != Variant::INT);
 	radius = godot_to_box2d(p_data);
 	if (radius < SHAPE_SMALLEST_VALUE) {
+		ERR_PRINT("Radius is too small.");
 		radius = SHAPE_SMALLEST_VALUE;
 	}
 	configured = true;
@@ -36,7 +37,11 @@ b2Shape *Box2DShapeCircle::get_transformed_b2Shape(int p_index, const Transform2
 	ERR_FAIL_INDEX_V(p_index, 1, nullptr);
 	b2CircleShape *shape = memnew(b2CircleShape);
 	// for now we don't support elipsys
-	godot_to_box2d(radius * p_transform.get_scale().x, shape->m_radius);
+	Vector2 scale = p_transform.get_scale();
+	if (scale.x != scale.y) {
+		ERR_PRINT("Circles don't support non uniform scale.");
+	}
+	godot_to_box2d(radius * scale.x, shape->m_radius);
 	godot_to_box2d(p_transform.get_origin(), shape->m_p);
 	return shape;
 }
@@ -211,6 +216,10 @@ void Box2DShapeSegment::set_data(const Variant &p_data) {
 	Rect2 rect = p_data;
 	a = rect.get_position();
 	b = rect.get_size();
+	half_extents = Vector2((a - b).length(), SHAPE_SMALLEST_VALUE);
+	if (half_extents.x < SHAPE_SMALLEST_VALUE) {
+		half_extents.x = SHAPE_SMALLEST_VALUE;
+	}
 	configured = true;
 }
 
@@ -219,17 +228,33 @@ Variant Box2DShapeSegment::get_data() const {
 }
 
 b2Shape *Box2DShapeSegment::get_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
-	ERR_FAIL_INDEX_V(p_index, 1, nullptr);
-	b2EdgeShape *shape = memnew(b2EdgeShape);
-	b2Vec2 edge_endpoints[2];
-	godot_to_box2d(p_transform.xform(a), edge_endpoints[0]);
-	godot_to_box2d(p_transform.xform(b), edge_endpoints[1]);
-	if (one_way) {
-		b2Vec2 dirV0 = edge_endpoints[0] - edge_endpoints[1];
-		shape->SetOneSided(edge_endpoints[1] + dirV0, edge_endpoints[0], edge_endpoints[1], edge_endpoints[0] - dirV0);
-	} else {
-		shape->SetTwoSided(edge_endpoints[0], edge_endpoints[1]);
+	// make a line if it's static
+	if (body && body->get_b2BodyDef()->type == b2_staticBody) {
+		ERR_FAIL_INDEX_V(p_index, 1, nullptr);
+		b2EdgeShape *shape = memnew(b2EdgeShape);
+		b2Vec2 edge_endpoints[2];
+		godot_to_box2d(p_transform.xform(a), edge_endpoints[0]);
+		godot_to_box2d(p_transform.xform(b), edge_endpoints[1]);
+		if (one_way) {
+			b2Vec2 dirV0 = edge_endpoints[0] - edge_endpoints[1];
+			shape->SetOneSided(edge_endpoints[1] + dirV0, edge_endpoints[0], edge_endpoints[1], edge_endpoints[0] - dirV0);
+		} else {
+			shape->SetTwoSided(edge_endpoints[0], edge_endpoints[1]);
+		}
+		return shape;
 	}
+	// make a square if not
+	ERR_FAIL_INDEX_V(p_index, 1, nullptr);
+	b2PolygonShape *shape = memnew(b2PolygonShape);
+	b2Vec2 *box2d_points = new b2Vec2[4];
+	Vector2 dir = (a - b).normalized();
+	Vector2 right(dir.y, -dir.x);
+	godot_to_box2d(p_transform.xform(a - right * SHAPE_SMALLEST_VALUE), box2d_points[0]);
+	godot_to_box2d(p_transform.xform(a + right * SHAPE_SMALLEST_VALUE), box2d_points[1]);
+	godot_to_box2d(p_transform.xform(b - right * SHAPE_SMALLEST_VALUE), box2d_points[2]);
+	godot_to_box2d(p_transform.xform(b + right * SHAPE_SMALLEST_VALUE), box2d_points[3]);
+	shape->Set(box2d_points, 4);
+	delete[] box2d_points;
 	return shape;
 }
 

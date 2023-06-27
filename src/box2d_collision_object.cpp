@@ -494,7 +494,8 @@ void Box2DCollisionObject::remove_shape(Box2DShape *p_shape) {
 	p_shape->remove_body(this);
 }
 
-void Box2DCollisionObject::recreate_shape(int p_index) {
+void Box2DCollisionObject::recreate_shapes() {
+	// todo make it work with one shape
 	_clear_fixtures();
 	_update_shapes();
 }
@@ -760,6 +761,7 @@ void Box2DCollisionObject::set_b2Body(b2Body *p_body) {
 	// set additional properties here
 	if (body) {
 		body->SetMassData(&mass_data);
+		recreate_shapes();
 	}
 }
 
