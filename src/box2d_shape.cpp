@@ -3,13 +3,15 @@
 #include "box2d_type_conversions.h"
 
 #include <godot_cpp/core/memory.hpp>
+#include "b2_user_settings.h"
 
 #include <box2d/b2_chain_shape.h>
 #include <box2d/b2_circle_shape.h>
 #include <box2d/b2_edge_shape.h>
 #include <box2d/b2_polygon_shape.h>
 
-#define SHAPE_SMALLEST_VALUE 0.1
+#define SHAPE_SMALLEST_VALUE b2_linearSlop * 2
+#define SHAPE_EDGE_SMALLEST_VALUE 0.1
 
 void Box2DShape::recreate_shape() {
 	if (body) {
@@ -23,7 +25,7 @@ void Box2DShapeCircle::set_data(const Variant &p_data) {
 	ERR_FAIL_COND(p_data.get_type() != Variant::FLOAT && p_data.get_type() != Variant::INT);
 	radius = godot_to_box2d(p_data);
 	if (radius < SHAPE_SMALLEST_VALUE) {
-		ERR_PRINT("Radius is too small.");
+		ERR_PRINT("Radius is too small. Using " + rtos(SHAPE_SMALLEST_VALUE));
 		radius = SHAPE_SMALLEST_VALUE;
 	}
 	configured = true;
@@ -52,9 +54,11 @@ void Box2DShapeRectangle::set_data(const Variant &p_data) {
 	ERR_FAIL_COND(p_data.get_type() != Variant::VECTOR2);
 	half_extents = p_data;
 	if (half_extents.x < SHAPE_SMALLEST_VALUE) {
+		ERR_PRINT("Width is too small. Using " + rtos(SHAPE_SMALLEST_VALUE));
 		half_extents.x = SHAPE_SMALLEST_VALUE;
 	}
 	if (half_extents.y < SHAPE_SMALLEST_VALUE) {
+		ERR_PRINT("Width is too small. Using " + rtos(SHAPE_SMALLEST_VALUE));
 		half_extents.y = SHAPE_SMALLEST_VALUE;
 	}
 	configured = true;
@@ -93,12 +97,15 @@ void Box2DShapeCapsule::set_data(const Variant &p_data) {
 		height = p.y;
 	}
 	if (radius < SHAPE_SMALLEST_VALUE) {
+		ERR_PRINT("Radius is too small. Using " + rtos(SHAPE_SMALLEST_VALUE));
 		radius = SHAPE_SMALLEST_VALUE;
 	}
 	if (height < SHAPE_SMALLEST_VALUE) {
+		ERR_PRINT("Height is too small. Using " + rtos(SHAPE_SMALLEST_VALUE));
 		height = SHAPE_SMALLEST_VALUE;
 	}
 	if (radius > height * 0.5 - SHAPE_SMALLEST_VALUE) {
+		ERR_PRINT("Radius is bigger than half the height. Using " + rtos(height * 0.5 - SHAPE_SMALLEST_VALUE));
 		radius = height * 0.5 - SHAPE_SMALLEST_VALUE;
 	}
 	configured = true;
@@ -249,10 +256,10 @@ b2Shape *Box2DShapeSegment::get_transformed_b2Shape(int p_index, const Transform
 	b2Vec2 *box2d_points = new b2Vec2[4];
 	Vector2 dir = (a - b).normalized();
 	Vector2 right(dir.y, -dir.x);
-	godot_to_box2d(p_transform.xform(a - right * SHAPE_SMALLEST_VALUE), box2d_points[0]);
-	godot_to_box2d(p_transform.xform(a + right * SHAPE_SMALLEST_VALUE), box2d_points[1]);
-	godot_to_box2d(p_transform.xform(b - right * SHAPE_SMALLEST_VALUE), box2d_points[2]);
-	godot_to_box2d(p_transform.xform(b + right * SHAPE_SMALLEST_VALUE), box2d_points[3]);
+	godot_to_box2d(p_transform.xform(a - right * SHAPE_EDGE_SMALLEST_VALUE), box2d_points[0]);
+	godot_to_box2d(p_transform.xform(a + right * SHAPE_EDGE_SMALLEST_VALUE), box2d_points[1]);
+	godot_to_box2d(p_transform.xform(b - right * SHAPE_EDGE_SMALLEST_VALUE), box2d_points[2]);
+	godot_to_box2d(p_transform.xform(b + right * SHAPE_EDGE_SMALLEST_VALUE), box2d_points[3]);
 	shape->Set(box2d_points, 4);
 	delete[] box2d_points;
 	return shape;
