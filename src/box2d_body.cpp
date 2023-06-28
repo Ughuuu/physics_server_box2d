@@ -70,11 +70,11 @@ void Box2DBody::set_mode(PhysicsServer2D::BodyMode p_mode) {
 			body_def->fixedRotation = false;
 			set_active(true); // TODO: consider contacts
 		} break;
-		case PhysicsServer2D::BODY_MODE_RIGID:{
+		case PhysicsServer2D::BODY_MODE_RIGID: {
 			body_def->type = b2_dynamicBody;
 			body_def->fixedRotation = false;
 			set_active(true);
-		}break;
+		} break;
 		case PhysicsServer2D::BODY_MODE_RIGID_LINEAR: {
 			// TODO: (inverse) mass calculation?
 			//_set_static(false);
@@ -85,6 +85,7 @@ void Box2DBody::set_mode(PhysicsServer2D::BodyMode p_mode) {
 	}
 	if (body) {
 		body->SetType(body_def->type);
+		body->SetFixedRotation(body_def->fixedRotation);
 	}
 	recreate_shapes();
 }
