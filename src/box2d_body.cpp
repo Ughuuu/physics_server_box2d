@@ -80,6 +80,7 @@ void Box2DBody::set_mode(PhysicsServer2D::BodyMode p_mode) {
 	if (body) {
 		body->SetType(body_def->type);
 	}
+	recreate_shapes();
 }
 
 PhysicsServer2D::BodyMode Box2DBody::get_mode() const {

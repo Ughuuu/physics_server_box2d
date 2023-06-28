@@ -58,6 +58,7 @@ public:
 };
 
 class Box2DShapeRectangle : public Box2DShape {
+protected:
 	Vector2 half_extents;
 
 public:
@@ -110,7 +111,7 @@ public:
 	~Box2DShapeConcavePolygon() {}
 };
 
-class Box2DShapeSegment : public Box2DShape {
+class Box2DShapeSegment : public Box2DShapeRectangle {
 	Vector2 a;
 	Vector2 b;
 
