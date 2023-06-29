@@ -1,0 +1,40 @@
+[gd_scene load_steps=4 format=3 uid="uid://bkg2s3kstpa0u"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_52jbk"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_myvbe"]
+b = Vector2(10, 2.08165e-12)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_ff312"]
+
+[node name="test" type="Node2D"]
+
+[node name="Segment" type="RigidBody2D" parent="."]
+position = Vector2(10, -324)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Segment"]
+shape = SubResource("SegmentShape2D_52jbk")
+
+[node name="RigidBody2D2" type="RigidBody2D" parent="."]
+position = Vector2(8, -153)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D2"]
+shape = SubResource("SegmentShape2D_myvbe")
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+position = Vector2(-4, -153)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+position = Vector2(10, 10)
+rotation = 0.523599
+shape = SubResource("SegmentShape2D_myvbe")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(5, -112)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("WorldBoundaryShape2D_ff312")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(3, -119)
+zoom = Vector2(3, 3)
