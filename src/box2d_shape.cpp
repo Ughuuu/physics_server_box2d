@@ -35,7 +35,7 @@ Variant Box2DShapeCircle::get_data() const {
 	return radius;
 }
 
-b2Shape *Box2DShapeCircle::get_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
+b2Shape *Box2DShapeCircle::create_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
 	ERR_FAIL_INDEX_V(p_index, 1, nullptr);
 	b2CircleShape *shape = memnew(b2CircleShape);
 	// for now we don't support elipsys
@@ -68,7 +68,7 @@ Variant Box2DShapeRectangle::get_data() const {
 	return half_extents;
 }
 
-b2Shape *Box2DShapeRectangle::get_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
+b2Shape *Box2DShapeRectangle::create_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
 	ERR_FAIL_INDEX_V(p_index, 1, nullptr);
 	b2PolygonShape *shape = memnew(b2PolygonShape);
 	b2Vec2 box2d_half_extents = godot_to_box2d(half_extents);
@@ -115,12 +115,12 @@ Variant Box2DShapeCapsule::get_data() const {
 	return Vector2(height, radius);
 }
 
-int Box2DShapeCapsule::get_b2Shape_count() {
+int Box2DShapeCapsule::get_b2Shape_count() const{
 	// TODO: Better handle the degenerate case when the capsule is a sphere.
 	return 3;
 }
 
-b2Shape *Box2DShapeCapsule::get_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
+b2Shape *Box2DShapeCapsule::create_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
 	ERR_FAIL_INDEX_V(p_index, 3, nullptr);
 	if (p_index == 0 || p_index == 1) {
 		b2CircleShape *shape = memnew(b2CircleShape);
@@ -160,7 +160,7 @@ Variant Box2DShapeConvexPolygon::get_data() const {
 	return points_array;
 }
 
-b2Shape *Box2DShapeConvexPolygon::get_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
+b2Shape *Box2DShapeConvexPolygon::create_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
 	ERR_FAIL_INDEX_V(p_index, 1, nullptr);
 	if (points.size() >= b2_maxPolygonVertices) {
 		// create a chain loop
@@ -204,7 +204,7 @@ Variant Box2DShapeConcavePolygon::get_data() const {
 	return points_array;
 }
 
-b2Shape *Box2DShapeConcavePolygon::get_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
+b2Shape *Box2DShapeConcavePolygon::create_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
 	ERR_FAIL_INDEX_V(p_index, 1, nullptr);
 	b2ChainShape *shape = memnew(b2ChainShape);
 	b2Vec2 *box2d_points = new b2Vec2[points.size()];
@@ -234,7 +234,7 @@ Variant Box2DShapeSegment::get_data() const {
 	return Rect2(a, b);
 }
 
-b2Shape *Box2DShapeSegment::get_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
+b2Shape *Box2DShapeSegment::create_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
 	// make a line if it's static
 	if (body && body->get_b2BodyDef()->type == b2_staticBody) {
 		ERR_FAIL_INDEX_V(p_index, 1, nullptr);
@@ -284,7 +284,7 @@ Variant Box2DShapeWorldBoundary::get_data() const {
 	return data;
 }
 
-b2Shape *Box2DShapeWorldBoundary::get_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
+b2Shape *Box2DShapeWorldBoundary::create_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
 	ERR_FAIL_INDEX_V(p_index, 1, nullptr);
 	b2EdgeShape *shape = memnew(b2EdgeShape);
 	b2Vec2 edge_endpoints[2];
@@ -317,7 +317,7 @@ Variant Box2DShapeSeparationRay::get_data() const {
 	return Variant();
 }
 
-b2Shape *Box2DShapeSeparationRay::get_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
+b2Shape *Box2DShapeSeparationRay::create_transformed_b2Shape(int p_index, const Transform2D &p_transform, bool one_way) {
 	ERR_FAIL_INDEX_V(p_index, 1, nullptr);
 	b2EdgeShape *shape = memnew(b2EdgeShape);
 	b2Vec2 edge_endpoints[2];

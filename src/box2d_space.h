@@ -29,7 +29,7 @@ private:
 	double solver_iterations = 8;
 
 	Box2DDirectSpaceState *direct_state = nullptr;
-
+	int step_count = 0; // used for caching
 public:
 	/* PHYSICS SERVER API */
 	int32_t get_active_body_count();

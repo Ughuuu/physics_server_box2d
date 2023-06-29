@@ -463,6 +463,7 @@ void Box2DCollisionObject::set_shape_disabled(int p_index, bool p_disabled) {
 		if (body) {
 			body->DestroyFixture(shape.fixtures[j]);
 		}
+		shape.shape->set_b2Shape(nullptr);
 		shape.fixtures.write[j] = nullptr;
 	}
 	shape.fixtures.clear();
@@ -512,6 +513,7 @@ void Box2DCollisionObject::remove_shape(int p_index) {
 			}
 			shape.fixtures.write[j] = nullptr;
 		}
+		shape.shape->set_b2Shape(nullptr);
 		shape.fixtures.clear();
 	}
 	shapes.remove_at(p_index);
@@ -528,6 +530,7 @@ void Box2DCollisionObject::_clear_fixtures() {
 			}
 			shape.fixtures.write[j] = nullptr;
 		}
+		shape.shape->set_b2Shape(nullptr);
 		shape.fixtures.clear();
 	}
 }
@@ -589,7 +592,8 @@ void Box2DCollisionObject::_update_shapes() {
 			s.fixtures.resize(box2d_shape_count);
 			for (int j = 0; j < box2d_shape_count; j++) {
 				b2FixtureDef fixture_def;
-				fixture_def.shape = s.shape->get_transformed_b2Shape(j, s.xform, s.one_way_collision);
+				s.shape->set_b2Shape(s.shape->create_transformed_b2Shape(j, s.xform, s.one_way_collision));
+				fixture_def.shape = s.shape->get_b2Shape();
 				fixture_def.density = 1.0f;
 				fixture_def.filter.maskBits = collision_mask;
 				fixture_def.filter.categoryBits = collision_layer;

@@ -85,7 +85,10 @@ void Box2DBody::set_mode(PhysicsServer2D::BodyMode p_mode) {
 	}
 	if (body) {
 		body->SetType(body_def->type);
-		body->SetFixedRotation(body_def->fixedRotation);
+		if (body->IsFixedRotation() == body_def->fixedRotation) {
+			body->SetFixedRotation(body_def->fixedRotation);
+			body->SetMassData(&mass_data);
+		}
 	}
 	recreate_shapes();
 }

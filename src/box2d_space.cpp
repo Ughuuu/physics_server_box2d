@@ -67,8 +67,8 @@ void Box2DSpace::step(float p_step) {
 		b->self()->before_step();
 		b = b->next();
 	}
-	world->SetAutoClearForces(true);
 	world->Step(p_step, velocityIterations, positionIterations);
+	step_count++;
 
 	body_list = &get_active_body_list();
 	b = body_list->first();

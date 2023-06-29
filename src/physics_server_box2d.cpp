@@ -2,6 +2,7 @@
 
 #include <godot_cpp/core/class_db.hpp>
 
+#include "b2_contact.h"
 #include "box2d_direct_body_state.h"
 #include "box2d_direct_space_state.h"
 
@@ -114,9 +115,20 @@ bool PhysicsServerBox2D::_shape_collide(const RID &p_shape_A, const Transform2D 
 	const Box2DShape *shape_B = shape_owner.get_or_null(p_shape_B);
 	ERR_FAIL_COND_V(!shape_A, false);
 	ERR_FAIL_COND_V(!shape_B, false);
-
-	WARN_PRINT_ONCE("TODO_shape_collide");
-	return false;
+	b2Shape *shapeA = shape_A->get_b2Shape();
+	b2Shape *shapeB = shape_B->get_b2Shape();
+	ERR_FAIL_COND_V(!shapeA, false);
+	ERR_FAIL_COND_V(!shapeB, false);
+	b2Transform xfA(godot_to_box2d(p_xform_A.get_origin()), b2Rot(p_xform_A.get_rotation()));
+	b2Transform xfB(godot_to_box2d(p_xform_B.get_origin()), b2Rot(p_xform_B.get_rotation()));
+	bool overlap = false;
+	for (int iA=0;iA<shape_A->get_b2Shape_count();iA++) {
+		for (int iB=0;iB<shape_B->get_b2Shape_count();iB++) {
+			overlap |= b2TestOverlap(shapeA, iA, shapeB, iB, xfA, xfB);
+		}
+	}
+	*p_result_count = 0;
+	return overlap;
 }
 
 /* SPACE API */
