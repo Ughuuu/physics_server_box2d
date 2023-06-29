@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c7hwetrhwy0un"]
+[gd_scene load_steps=11 format=3 uid="uid://c7hwetrhwy0un"]
 
 [ext_resource type="Script" path="res://test/shapes/show_info_awake.gd" id="1_exs8i"]
 [ext_resource type="Script" path="res://test/shapes/show_process_info.gd" id="1_opawd"]
@@ -13,9 +13,10 @@
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nj8pp"]
 
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_ajmh2"]
+b = Vector2(2.08165e-12, 20)
+
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_adcah"]
-a = Vector2(19, 14)
-b = Vector2(-21, -16)
 
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_8fp0m"]
 points = PackedVector2Array(0, 0, 10, 2.08165e-12, 10, 2.08165e-12, 10, 10, 10, 10, 2.08165e-12, 10)
@@ -28,6 +29,7 @@ position = Vector2(-143, -125)
 script = ExtResource("1_opawd")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
 
 [node name="WorldBoundary" type="StaticBody2D" parent="."]
 position = Vector2(-1, 104)
@@ -64,6 +66,7 @@ script = ExtResource("1_exs8i")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Square"]
 position = Vector2(-4, -3)
 rotation = 0.422379
+skew = 0.383972
 shape = SubResource("RectangleShape2D_hdaxb")
 
 [node name="Square2" type="StaticBody2D" parent="."]
@@ -99,13 +102,14 @@ position = Vector2(16, -66)
 continuous_cd = 2
 max_contacts_reported = 10
 contact_monitor = true
+lock_rotation = true
 linear_damp = 1.06
 script = ExtResource("1_exs8i")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CollisionPolygonConvex_complex"]
 position = Vector2(1, -4)
 rotation = 0.309651
-polygon = PackedVector2Array(-1, -17, 9, -16, 16, -9, 19, 1, 16, 8, 6, 17, -3, 18, -11, 12, -16, 1, -18, -6, -14, -12)
+polygon = PackedVector2Array(5.02866, 2.59085, 9, -16, 16, -9, 19, 1, 16, 8, 6, 17, -3, 18, -11, 12, -16, 1, -18, -6, -14, -12)
 
 [node name="CollisionPolygonConvex_complex2" type="StaticBody2D" parent="."]
 position = Vector2(71, 16)
@@ -147,6 +151,7 @@ script = ExtResource("1_exs8i")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CollisionPolygonConcave_simple"]
 position = Vector2(-4, -5)
 rotation = 0.145011
+skew = 0.506145
 polygon = PackedVector2Array(-1, -17, 16, 8, 0, -2, -16, 1)
 
 [node name="CollisionPolygonConcave_simple2" type="StaticBody2D" parent="."]
@@ -159,11 +164,18 @@ rotation = 0.145011
 polygon = PackedVector2Array(-1, -17, 16, 8, 0, -2, -16, 1)
 
 [node name="Segment" type="RigidBody2D" parent="."]
-position = Vector2(-61, -80)
+position = Vector2(-54, -133)
+rotation = 0.8293
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Segment"]
+shape = SubResource("SegmentShape2D_ajmh2")
+
+[node name="Segment3" type="RigidBody2D" parent="."]
+position = Vector2(-61, -88)
 rotation = -0.3629
 script = ExtResource("1_exs8i")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Segment"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Segment3"]
 position = Vector2(2, -1)
 rotation = -0.592311
 shape = SubResource("SegmentShape2D_adcah")

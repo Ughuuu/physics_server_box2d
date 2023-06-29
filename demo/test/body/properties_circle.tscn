@@ -9,13 +9,16 @@
 [node name="Circle" type="RigidBody2D" parent="."]
 position = Vector2(-1, -99)
 center_of_mass_mode = 1
-constant_force = Vector2(1, 1)
-constant_torque = 10.0
+constant_force = Vector2(0.1, 0.2)
+constant_torque = 0.1
 script = ExtResource("1_3prje")
 
 [node name="Camera2D" type="Camera2D" parent="Circle"]
 position = Vector2(4, 152)
 zoom = Vector2(1.5, 1.5)
+process_callback = 0
+limit_smoothed = true
+position_smoothing_speed = 1e+13
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Circle"]
 position = Vector2(-3, -3)

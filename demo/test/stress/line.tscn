@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://bcvl230u4p7v6"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_f4clf"]
+b = Vector2(50, 70)
+
+[node name="line" type="RigidBody2D"]
+max_contacts_reported = 2
+contact_monitor = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("SegmentShape2D_f4clf")
