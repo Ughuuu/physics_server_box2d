@@ -2,7 +2,6 @@
 
 #include <godot_cpp/core/class_db.hpp>
 
-#include "b2_contact.h"
 #include "box2d_direct_body_state.h"
 #include "box2d_direct_space_state.h"
 
