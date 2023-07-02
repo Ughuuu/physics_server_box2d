@@ -32,7 +32,6 @@ public:
 	_FORCE_INLINE_ RID get_self() const { return self; }
 
 	_FORCE_INLINE_ bool is_configured() const { return configured; }
-	virtual void recreate_shape();
 	virtual void set_data(const Variant &p_data) = 0;
 	virtual Variant get_data() const = 0;
 

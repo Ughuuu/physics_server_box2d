@@ -90,7 +90,6 @@ void Box2DBody::set_mode(PhysicsServer2D::BodyMode p_mode) {
 		body->SetFixedRotation(body_def->fixedRotation);
 		body->SetMassData(&mass_data);
 	}
-	//recreate_shapes();
 }
 
 PhysicsServer2D::BodyMode Box2DBody::get_mode() const {
