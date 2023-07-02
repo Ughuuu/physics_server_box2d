@@ -193,13 +193,6 @@ b2JointDef *Box2DJoint::get_b2JointDef() {
 	}
 	return joint_def;
 }
-void Box2DJoint::set_b2JointDef(b2JointDef *p_joint_def) {
-	if (joint_def == p_joint_def) {
-		return;
-	}
-	joint_def = p_joint_def;
-	_recreate_joint();
-}
 b2Joint *Box2DJoint::get_b2Joint() {
 	return joint;
 }

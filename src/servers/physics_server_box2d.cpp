@@ -559,7 +559,6 @@ void PhysicsServerBox2D::_body_add_shape(const RID &p_body, const RID &p_shape, 
 	ERR_FAIL_COND(!shape);
 
 	body->add_shape(shape, p_transform, p_disabled);
-	shape->set_body(body);
 }
 
 void PhysicsServerBox2D::_body_set_shape(const RID &p_body, int32_t p_shape_idx, const RID &p_shape) {
@@ -571,7 +570,6 @@ void PhysicsServerBox2D::_body_set_shape(const RID &p_body, int32_t p_shape_idx,
 	ERR_FAIL_COND(!shape->is_configured());
 
 	body->set_shape(p_shape_idx, shape);
-	shape->set_body(body);
 }
 
 void PhysicsServerBox2D::_body_set_shape_transform(const RID &p_body, int32_t p_shape_idx, const Transform2D &p_transform) {
@@ -608,7 +606,6 @@ Transform2D PhysicsServerBox2D::_body_get_shape_transform(const RID &p_body, int
 void PhysicsServerBox2D::_body_remove_shape(const RID &p_body, int32_t p_shape_idx) {
 	Box2DBody *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_COND(!body);
-	body->get_shape(p_shape_idx)->remove_body(body);
 	body->remove_shape(p_shape_idx);
 }
 
@@ -617,7 +614,6 @@ void PhysicsServerBox2D::_body_clear_shapes(const RID &p_body) {
 	ERR_FAIL_COND(!body);
 
 	while (body->get_shape_count()) {
-		body->get_shape(0)->remove_body(body);
 		body->remove_shape(0);
 	}
 }

@@ -84,7 +84,6 @@ public:
 	real_t get_damped_spring_damping();
 
 	b2JointDef *get_b2JointDef();
-	void set_b2JointDef(b2JointDef *p_joint_def);
 	b2Joint *get_b2Joint();
 	void set_b2Joint(b2Joint *p_joint);
 

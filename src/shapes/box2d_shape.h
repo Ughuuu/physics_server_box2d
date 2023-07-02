@@ -17,16 +17,11 @@ class Box2DShape {
 	RID self;
 
 protected:
-	Box2DCollisionObject *body = nullptr;
 	bool configured = false;
 	PhysicsServer2D::ShapeType type;
 
 public:
 	_FORCE_INLINE_ PhysicsServer2D::ShapeType get_type() const { return type; }
-
-	_FORCE_INLINE_ void set_body(Box2DCollisionObject *p_body) { body = p_body; }
-	_FORCE_INLINE_ void remove_body(const Box2DCollisionObject *p_body) { body = nullptr; }
-	_FORCE_INLINE_ Box2DCollisionObject *get_body() const { return body; }
 
 	_FORCE_INLINE_ void set_self(const RID &p_self) { self = p_self; }
 	_FORCE_INLINE_ RID get_self() const { return self; }
